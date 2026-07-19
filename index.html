@@ -3,22 +3,33 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>AI LMS Studio</title>
+  <title>Learn AI — Bite-Sized Learning</title>
+  <meta name="description" content="AI-powered learning platform with bite-sized lessons"/>
+  <meta name="theme-color" content="#58cc02"/>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="styles.css"/>
+  
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
-  <div class="bg-glow" aria-hidden="true"></div>
-
+  <div class="bg-gradient" aria-hidden="true"></div>
+  
+  <!-- TOPBAR -->
   <header class="topbar">
     <div class="container topbar-inner">
-      <div class="brand"><span class="brand-badge">AI</span><span>LMS Studio</span></div>
+      <div class="brand">
+        <div class="brand-icon">🎓</div>
+        <span class="brand-text">Learn AI</span>
+      </div>
       <div class="topbar-actions">
-        <span id="nav-user" class="user-chip hidden"></span>
+        <div id="nav-stats" class="stat-pill hidden">
+          <span class="stat-icon">🔥</span>
+          <span id="streak-count">0</span>
+        </div>
         <button id="nav-dashboard" class="btn ghost hidden">Dashboard</button>
         <button id="nav-generate" class="btn ghost hidden">New Course</button>
         <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">🌙</button>
@@ -29,15 +40,17 @@
 
   <main id="main" class="container">
 
-    <!-- LOGIN -->
+    <!-- LOGIN VIEW -->
     <section id="view-login" class="view">
-      <div class="auth-shell">
-        <div class="card auth-card">
-          <div class="eyebrow">AI Learning Platform</div>
-          <h1>Learn anything, instantly</h1>
-          <p class="muted">Sign in to generate courses, take quizzes, and track progress.</p>
+      <div class="auth-container">
+        <div class="auth-card">
+          <div class="auth-header">
+            <div class="auth-icon">🚀</div>
+            <h1>Start Learning Today</h1>
+            <p class="muted">AI-powered courses that adapt to you</p>
+          </div>
 
-          <div id="google-signin-container" class="hidden" style="margin:18px 0;">
+          <div id="google-signin-container" class="hidden">
             <div id="g_id_onload" data-auto_prompt="false"></div>
             <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin_with" data-shape="rectangular" data-width="100%"></div>
           </div>
@@ -46,116 +59,163 @@
 
           <div id="magic-link-form">
             <div class="field">
-              <label for="login-email">Email</label>
+              <label for="login-email">Email address</label>
               <input id="login-email" type="email" placeholder="you@example.com" autocomplete="email"/>
             </div>
             <button id="send-code-btn" class="btn primary block">Send Login Code</button>
           </div>
 
           <div id="verify-code-form" class="hidden">
-            <p class="muted" style="margin:12px 0;">Check your email for a 6-digit code.</p>
+            <p class="muted text-center" style="margin:16px 0;">Check your email for a 6-digit code</p>
             <div class="field">
-              <label for="login-code">Code</label>
-              <input id="login-code" type="text" placeholder="123456" maxlength="6" autocomplete="one-time-code" style="text-align:center;font-size:24px;letter-spacing:8px;"/>
+              <input id="login-code" type="text" placeholder="000000" maxlength="6" autocomplete="one-time-code" class="code-input"/>
             </div>
-            <button id="verify-code-btn" class="btn primary block">Verify &amp; Sign In</button>
-            <button id="resend-btn" class="btn ghost block" style="margin-top:8px;">Resend Code</button>
+            <button id="verify-code-btn" class="btn primary block">Verify & Continue</button>
+            <button id="resend-btn" class="btn ghost block" style="margin-top:10px;">Resend Code</button>
           </div>
 
-          <div id="invite-field" class="field hidden" style="margin-top:14px;">
-            <label for="login-invite">Invite Code</label>
+          <div id="invite-field" class="field hidden" style="margin-top:16px;">
+            <label for="login-invite">Invite Code (if required)</label>
             <input id="login-invite" type="text" placeholder="ABC123-XYZ789"/>
           </div>
 
-          <div id="turnstile-container" class="hidden" style="margin-top:14px;"></div>
+          <div id="turnstile-container" class="hidden" style="margin-top:16px;"></div>
         </div>
       </div>
     </section>
 
-    <!-- DASHBOARD -->
+    <!-- DASHBOARD VIEW -->
     <section id="view-dashboard" class="view hidden">
-      <div class="hero card">
-        <div>
-          <div class="eyebrow">Dashboard</div>
-          <h2 id="dashboard-greeting">Welcome</h2>
-          <p class="muted">Your AI-generated learning paths and progress.</p>
-        </div>
-        <div class="toolbar">
-          <button id="dashboard-new" class="btn primary">Generate New Course</button>
-          <button id="dashboard-continue" class="btn hidden">Continue Learning</button>
+      <div class="dashboard-header">
+        <div class="welcome-card">
+          <div>
+            <div class="eyebrow">Welcome back</div>
+            <h2 id="dashboard-greeting">Ready to learn?</h2>
+            <p class="muted" id="dashboard-subtitle">Your personalized learning journey</p>
+          </div>
+          <div class="dashboard-actions">
+            <button id="dashboard-new" class="btn primary large">
+              <span class="btn-icon">✨</span>
+              Generate New Course
+            </button>
+            <button id="dashboard-continue" class="btn secondary large hidden">
+              <span class="btn-icon">▶️</span>
+              Continue Learning
+            </button>
+          </div>
         </div>
       </div>
-      <div id="dashboard-stats" class="stats"></div>
-      <section class="panel">
-        <div class="panel-head"><h3>Your Courses</h3></div>
-        <div id="dashboard-courses" class="grid"></div>
+
+      <!-- Stats Grid -->
+      <div id="dashboard-stats" class="stats-grid"></div>
+
+      <!-- Achievements -->
+      <section class="panel" id="achievements-panel">
+        <div class="panel-header">
+          <h3>🏆 Achievements</h3>
+          <span class="badge muted" id="achievements-count">0 unlocked</span>
+        </div>
+        <div id="achievements-grid" class="achievements-grid"></div>
       </section>
+
+      <!-- Courses -->
       <section class="panel">
-        <div class="panel-head"><h3>Recent Quiz Scores</h3></div>
+        <div class="panel-header">
+          <h3>📚 Your Courses</h3>
+        </div>
+        <div id="dashboard-courses" class="courses-grid"></div>
+      </section>
+
+      <!-- Recent Activity -->
+      <section class="panel">
+        <div class="panel-header">
+          <h3>📊 Recent Quiz Scores</h3>
+        </div>
         <div id="dashboard-scores"></div>
       </section>
     </section>
 
-    <!-- GENERATE -->
+    <!-- GENERATE VIEW -->
     <section id="view-generate" class="view hidden">
-      <div class="panel narrow">
-        <div class="panel-head">
-          <h2>Generate a Course</h2>
-          <p class="muted">Describe what you want to learn.</p>
-        </div>
-        <div class="field">
-          <label for="gen-prompt">Topic or learning goal</label>
-          <textarea id="gen-prompt" rows="5" placeholder="Example: Learn Python for data analysis"></textarea>
-        </div>
-        <div class="field-grid">
+      <div class="generate-container">
+        <div class="panel">
+          <div class="panel-header">
+            <button id="gen-back" class="btn ghost small">← Back</button>
+            <h2>✨ Generate Your Course</h2>
+            <p class="muted">Tell us what you want to learn, and we'll create a personalized curriculum</p>
+          </div>
+
           <div class="field">
-            <label for="gen-level">Skill level</label>
-            <select id="gen-level">
-              <option value="beginner">Beginner</option>
-              <option value="intermediate">Intermediate</option>
-              <option value="advanced">Advanced</option>
+            <label for="gen-prompt">What do you want to learn?</label>
+            <textarea id="gen-prompt" rows="4" placeholder="Example: Learn Python for data analysis and automation"></textarea>
+          </div>
+
+          <div class="field-grid">
+            <div class="field">
+              <label for="gen-level">Skill Level</label>
+              <select id="gen-level">
+                <option value="beginner">🌱 Beginner</option>
+                <option value="intermediate">📈 Intermediate</option>
+                <option value="advanced">🚀 Advanced</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="gen-time">Time per Day</label>
+              <select id="gen-time">
+                <option value="15 minutes per day">⚡ 15 minutes</option>
+                <option value="30 minutes per day" selected>⏱️ 30 minutes</option>
+                <option value="60 minutes per day">🕐 60 minutes</option>
+                <option value="90 minutes per day">🕘 90 minutes</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="gen-style">Learning Style</label>
+            <select id="gen-style">
+              <option value="balanced" selected>⚖️ Balanced</option>
+              <option value="visual">👁️ Visual</option>
+              <option value="practical">🛠️ Practical</option>
+              <option value="reading">📖 Reading</option>
+              <option value="conversational">💬 Conversational</option>
             </select>
           </div>
-          <div class="field">
-            <label for="gen-time">Time per day</label>
-            <select id="gen-time">
-              <option value="15 minutes per day">15 min</option>
-              <option value="30 minutes per day" selected>30 min</option>
-              <option value="60 minutes per day">60 min</option>
-              <option value="90 minutes per day">90 min</option>
-              <option value="2 hours per day">2 hours</option>
-            </select>
-          </div>
-        </div>
-        <div class="field">
-          <label for="gen-style">Learning style</label>
-          <select id="gen-style">
-            <option value="balanced" selected>Balanced</option>
-            <option value="visual">Visual</option>
-            <option value="practical">Practical</option>
-            <option value="reading">Reading</option>
-            <option value="conversational">Conversational</option>
-          </select>
-        </div>
-        <div class="toolbar">
-          <button id="gen-back" class="btn">Back</button>
-          <button id="gen-btn" class="btn primary">Generate Course</button>
+
+          <button id="gen-btn" class="btn primary block large">
+            <span class="btn-icon">🎯</span>
+            Generate Course
+          </button>
         </div>
       </div>
     </section>
 
-    <!-- COURSE -->
-    <section id="view-course" class="view hidden"><div id="course-content"></div></section>
+    <!-- COURSE VIEW -->
+    <section id="view-course" class="view hidden">
+      <div id="course-content"></div>
+    </section>
 
-    <!-- LESSON -->
-    <section id="view-lesson" class="view hidden"><div id="lesson-content"></div></section>
+    <!-- LESSON VIEW -->
+    <section id="view-lesson" class="view hidden">
+      <div id="lesson-content"></div>
+    </section>
 
-    <!-- QUIZ -->
-    <section id="view-quiz" class="view hidden"><div id="quiz-content"></div></section>
+    <!-- QUIZ VIEW -->
+    <section id="view-quiz" class="view hidden">
+      <div id="quiz-content"></div>
+    </section>
   </main>
 
+  <!-- Toast Notification -->
   <div id="toast" class="toast"></div>
-  <div id="loading" class="loading hidden"><div class="spinner"></div><p id="loading-text">Working...</p></div>
+
+  <!-- Loading Overlay -->
+  <div id="loading" class="loading hidden">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <p id="loading-text">Working...</p>
+    </div>
+  </div>
 
   <script src="config.js"></script>
   <script src="app.js"></script>
