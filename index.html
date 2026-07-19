@@ -1,223 +1,688 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Learn AI — Bite-Sized Learning</title>
-  <meta name="description" content="AI-powered learning platform with bite-sized lessons"/>
-  <meta name="theme-color" content="#58cc02"/>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="styles.css"/>
-  
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Learn AI — Bite-Sized Learning</title>
+<meta name="description" content="AI-powered learning platform with bite-sized lessons"/>
+<meta name="theme-color" content="#58cc02"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --font:"Inter",system-ui,-apple-system,sans-serif;
+  --primary:#58cc02;--primary-dark:#46a302;--primary-light:#7dd321;
+  --secondary:#1cb0f6;--accent:#ff9600;--success:#58cc02;--danger:#ff4b4b;--warning:#ffc800;
+  --bg:#ffffff;--bg-secondary:#f7f9fc;--panel:#ffffff;--panel-hover:#f7f9fc;
+  --text:#3c3c3c;--text-secondary:#777777;--muted:#afafaf;
+  --border:#e5e5e5;--border-strong:#d0d0d0;
+  --shadow:0 2px 8px rgba(0,0,0,.08);--shadow-lg:0 8px 24px rgba(0,0,0,.12);
+  --radius:16px;--radius-sm:12px;--radius-lg:20px;
+}
+[data-theme="dark"]{
+  --bg:#131f24;--bg-secondary:#1a2e35;--panel:#1a2e35;--panel-hover:#233d46;
+  --text:#ffffff;--text-secondary:#afafaf;--muted:#777777;
+  --border:#2b4450;--border-strong:#3c5a68;
+  --shadow:0 2px 8px rgba(0,0,0,.3);--shadow-lg:0 8px 24px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;overflow-x:hidden;transition:background .3s ease,color .3s ease}
+.bg-gradient{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 20% 20%,rgba(88,204,2,.08) 0%,transparent 40%),radial-gradient(circle at 80% 80%,rgba(28,176,246,.08) 0%,transparent 40%)}
+.container{width:min(1200px,calc(100% - 32px));margin:0 auto;position:relative;z-index:1}
+.hidden{display:none !important}
+.topbar{position:sticky;top:0;z-index:100;background:var(--panel);border-bottom:2px solid var(--border);box-shadow:var(--shadow)}
+.topbar-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:72px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:20px}
+.brand-icon{font-size:32px;animation:bounce 2s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.brand-text{letter-spacing:-.02em}
+.topbar-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.stat-pill{display:flex;align-items:center;gap:8px;padding:8px 16px;background:linear-gradient(135deg,var(--accent) 0%,#ff6b00 100%);color:#fff;border-radius:999px;font-weight:700;font-size:15px;box-shadow:0 4px 12px rgba(255,150,0,.3)}
+.stat-icon{font-size:18px}
+.btn{appearance:none;border:2px solid var(--border);background:var(--panel);color:var(--text);border-radius:var(--radius-sm);padding:12px 20px;font-family:var(--font);font-weight:700;font-size:15px;cursor:pointer;transition:all .2s ease;display:inline-flex;align-items:center;justify-content:center;gap:8px;position:relative;overflow:hidden}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:var(--shadow)}
+.btn:active:not(:disabled){transform:translateY(0)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.primary{background:var(--primary);border-color:var(--primary-dark);color:#fff;box-shadow:0 4px 0 var(--primary-dark)}
+.btn.primary:hover:not(:disabled){background:var(--primary-light);box-shadow:0 6px 0 var(--primary-dark)}
+.btn.primary:active:not(:disabled){box-shadow:0 2px 0 var(--primary-dark);transform:translateY(2px)}
+.btn.secondary{background:var(--secondary);border-color:#1499d8;color:#fff;box-shadow:0 4px 0 #1499d8}
+.btn.secondary:hover:not(:disabled){background:#47c5f9;box-shadow:0 6px 0 #1499d8}
+.btn.ghost{background:transparent;border-color:transparent}
+.btn.ghost:hover:not(:disabled){background:var(--panel-hover)}
+.btn.block{width:100%}
+.btn.large{padding:16px 28px;font-size:17px}
+.btn.small{padding:8px 16px;font-size:14px}
+.btn-icon{font-size:18px}
+.icon-btn{width:44px;height:44px;border-radius:12px;border:2px solid var(--border);background:var(--panel);color:var(--text);cursor:pointer;font-size:20px;display:grid;place-items:center;transition:all .2s ease}
+.icon-btn:hover{background:var(--panel-hover);transform:scale(1.05)}
+.field{margin-bottom:20px}
+.field-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+label{display:block;margin-bottom:8px;font-weight:700;font-size:14px;color:var(--text)}
+input,select,textarea{width:100%;padding:14px 16px;border:2px solid var(--border);border-radius:var(--radius-sm);background:var(--panel);color:var(--text);font-family:var(--font);font-size:16px;transition:all .2s ease}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(88,204,2,.1)}
+textarea{resize:vertical;min-height:120px;line-height:1.6}
+.view{padding:32px 0 64px;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.panel{background:var(--panel);border:2px solid var(--border);border-radius:var(--radius-lg);padding:28px;margin-bottom:24px;box-shadow:var(--shadow);transition:all .2s ease}
+.panel:hover{box-shadow:var(--shadow-lg)}
+.panel-header{margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.panel-header h3{margin:0;font-size:22px;letter-spacing:-.02em}
+h1,h2,h3,h4{margin:0 0 12px;line-height:1.2;letter-spacing:-.03em;font-weight:800}
+h1{font-size:clamp(28px,5vw,42px)}h2{font-size:clamp(24px,4vw,36px)}h3{font-size:22px}h4{font-size:18px}
+p{margin:0 0 12px}
+.muted{color:var(--text-secondary)}
+.text-center{text-align:center}
+.eyebrow{display:inline-block;padding:6px 14px;border-radius:999px;background:var(--primary);color:#fff;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
+.auth-container{min-height:calc(100vh - 160px);display:grid;place-items:center;padding:32px 0}
+.auth-card{width:min(520px,100%);background:var(--panel);border:2px solid var(--border);border-radius:var(--radius-lg);padding:40px;box-shadow:var(--shadow-lg);animation:slideUp .4s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.auth-header{text-align:center;margin-bottom:32px}
+.auth-icon{font-size:64px;margin-bottom:16px;animation:bounce 2s ease-in-out infinite}
+.dashboard-header{margin-bottom:32px}
+.welcome-card{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);color:#fff;padding:32px;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.welcome-card h2{color:#fff;margin-bottom:8px}
+.welcome-card .muted{color:rgba(255,255,255,.85)}
+.welcome-card .eyebrow{background:rgba(255,255,255,.2)}
+.dashboard-actions{display:flex;gap:12px;flex-wrap:wrap}
+.welcome-card .btn{background:#fff;color:var(--primary-dark);border-color:#fff}
+.welcome-card .btn:hover{background:#f0f0f0}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:32px}
+.stat-card{background:var(--panel);border:2px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;transition:all .2s ease;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--primary),var(--secondary))}
+.stat-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.stat-icon-large{font-size:40px;margin-bottom:12px}
+.stat-value{font-size:36px;font-weight:900;color:var(--primary);line-height:1;margin-bottom:8px}
+.stat-label{font-size:14px;color:var(--text-secondary);font-weight:600}
+.achievements-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:16px}
+.achievement-card{background:var(--panel);border:2px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;transition:all .2s ease}
+.achievement-card:hover{transform:scale(1.05);box-shadow:var(--shadow-lg)}
+.achievement-icon{font-size:48px;margin-bottom:12px}
+.achievement-name{font-weight:700;font-size:14px;margin-bottom:4px}
+.achievement-desc{font-size:12px;color:var(--text-secondary);line-height:1.4}
+.courses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.course-card{background:var(--panel);border:2px solid var(--border);border-radius:var(--radius);padding:24px;transition:all .2s ease;cursor:pointer}
+.course-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--primary)}
+.course-card h4{margin-bottom:8px;font-size:18px}
+.course-meta{display:flex;gap:12px;margin:12px 0;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--bg-secondary);color:var(--text-secondary);font-size:12px;font-weight:700}
+.badge.success{background:var(--primary);color:#fff}
+.progress-container{margin:16px 0}
+.progress-bar{width:100%;height:12px;background:var(--border);border-radius:999px;overflow:hidden;position:relative}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--primary-light));border-radius:999px;transition:width .4s ease;position:relative}
+.progress-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);animation:shimmer 2s infinite}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.progress-text{display:flex;justify-content:space-between;margin-top:8px;font-size:13px;font-weight:600;color:var(--text-secondary)}
+.lesson-container{max-width:800px;margin:0 auto}
+.lesson-content{font-size:17px;line-height:1.8}
+.lesson-section{margin:24px 0;padding:20px;background:var(--bg-secondary);border-radius:var(--radius);border-left:4px solid var(--primary)}
+.lesson-section h4{color:var(--primary);margin-bottom:12px}
+.key-points{list-style:none;padding:0}
+.key-points li{padding:10px 0;padding-left:32px;position:relative;border-bottom:1px solid var(--border)}
+.key-points li:last-child{border-bottom:none}
+.key-points li::before{content:'✓';position:absolute;left:0;color:var(--primary);font-weight:900;font-size:20px}
+.lesson-item{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:20px;border:2px solid var(--border);border-radius:var(--radius);margin-bottom:12px;transition:all .2s ease;cursor:pointer}
+.lesson-item:hover{border-color:var(--primary);background:var(--panel-hover);transform:translateX(4px)}
+.lesson-item.completed{background:var(--bg-secondary);border-color:var(--primary)}
+.lesson-item-content{flex:1}
+.lesson-item-title{font-weight:700;font-size:16px;margin-bottom:4px}
+.lesson-item-summary{font-size:14px;color:var(--text-secondary)}
+.question-card{background:var(--panel);border:2px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px}
+.question-text{font-size:18px;font-weight:700;margin-bottom:20px;line-height:1.5}
+.options{display:grid;gap:12px}
+.option{display:flex;align-items:center;gap:12px;padding:16px;border:2px solid var(--border);border-radius:var(--radius-sm);background:var(--panel);cursor:pointer;transition:all .2s ease;font-weight:600}
+.option:hover{border-color:var(--primary);background:var(--panel-hover)}
+.option input[type="radio"]{width:20px;height:20px;cursor:pointer}
+.result-card{background:var(--panel);border-radius:var(--radius);padding:24px;margin-bottom:16px;border-left:6px solid var(--border)}
+.result-card.correct{border-left-color:var(--success)}
+.result-card.incorrect{border-left-color:var(--danger)}
+.score-display{text-align:center;padding:40px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border-radius:var(--radius-lg);margin-bottom:32px}
+.score-value{font-size:72px;font-weight:900;line-height:1;margin-bottom:8px}
+.score-label{font-size:18px;opacity:.9}
+.tutor-container{margin-top:32px;padding:24px;background:var(--bg-secondary);border-radius:var(--radius);border:2px solid var(--border)}
+.tutor-messages{height:300px;overflow-y:auto;padding:16px;background:var(--panel);border-radius:var(--radius-sm);margin-bottom:16px;border:2px solid var(--border)}
+.tutor-msg{max-width:80%;padding:12px 16px;border-radius:var(--radius-sm);margin-bottom:12px;font-size:15px;line-height:1.5;animation:slideIn .3s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.tutor-msg.user{margin-left:auto;background:var(--primary);color:#fff}
+.tutor-msg.ai{background:var(--panel);border:2px solid var(--border)}
+.tutor-input{display:flex;gap:12px}
+.tutor-input input{flex:1}
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:2px solid var(--border)}
+.table{width:100%;border-collapse:collapse;min-width:600px}
+.table th,.table td{padding:16px;text-align:left;border-bottom:2px solid var(--border)}
+.table th{background:var(--bg-secondary);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-secondary)}
+.table tbody tr:hover{background:var(--panel-hover)}
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--text);color:var(--bg);padding:16px 24px;border-radius:var(--radius-sm);font-weight:700;box-shadow:var(--shadow-lg);z-index:1000;opacity:0;transition:all .3s ease;max-width:90%}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.error{background:var(--danger);color:#fff}
+.toast.success{background:var(--success);color:#fff}
+.loading{position:fixed;inset:0;background:rgba(0,0,0,.5);display:grid;place-items:center;z-index:999;backdrop-filter:blur(4px)}
+.loading-content{background:var(--panel);padding:40px;border-radius:var(--radius-lg);text-align:center;box-shadow:var(--shadow-lg)}
+.spinner{width:48px;height:48px;border:4px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{padding:48px 24px;text-align:center;color:var(--text-secondary);background:var(--bg-secondary);border-radius:var(--radius);border:2px dashed var(--border)}
+.empty-icon{font-size:48px;margin-bottom:16px}
+@media(max-width:768px){
+  .topbar-inner{padding:12px 0}.brand-text{display:none}.welcome-card{flex-direction:column}
+  .dashboard-actions{width:100%}.dashboard-actions .btn{flex:1}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}.achievements-grid{grid-template-columns:repeat(2,1fr)}
+  .courses-grid{grid-template-columns:1fr}.lesson-item{flex-direction:column;align-items:stretch}
+  .tutor-input{flex-direction:column}.auth-card{padding:24px}
+}
+@media(max-width:480px){.stats-grid{grid-template-columns:1fr}.achievements-grid{grid-template-columns:1fr}.score-value{font-size:56px}}
+</style>
 </head>
 <body>
-  <div class="bg-gradient" aria-hidden="true"></div>
-  
-  <!-- TOPBAR -->
-  <header class="topbar">
-    <div class="container topbar-inner">
-      <div class="brand">
-        <div class="brand-icon">🎓</div>
-        <span class="brand-text">Learn AI</span>
-      </div>
-      <div class="topbar-actions">
-        <div id="nav-stats" class="stat-pill hidden">
-          <span class="stat-icon">🔥</span>
-          <span id="streak-count">0</span>
-        </div>
-        <button id="nav-dashboard" class="btn ghost hidden">Dashboard</button>
-        <button id="nav-generate" class="btn ghost hidden">New Course</button>
-        <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">🌙</button>
-        <button id="nav-logout" class="btn ghost hidden">Logout</button>
-      </div>
-    </div>
-  </header>
+<div class="bg-gradient" aria-hidden="true"></div>
 
-  <main id="main" class="container">
-
-    <!-- LOGIN VIEW -->
-    <section id="view-login" class="view">
-      <div class="auth-container">
-        <div class="auth-card">
-          <div class="auth-header">
-            <div class="auth-icon">🚀</div>
-            <h1>Start Learning Today</h1>
-            <p class="muted">AI-powered courses that adapt to you</p>
-          </div>
-
-          <div id="google-signin-container" class="hidden">
-            <div id="g_id_onload" data-auto_prompt="false"></div>
-            <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin_with" data-shape="rectangular" data-width="100%"></div>
-          </div>
-
-          <div id="auth-divider" class="divider hidden"><span>or</span></div>
-
-          <div id="magic-link-form">
-            <div class="field">
-              <label for="login-email">Email address</label>
-              <input id="login-email" type="email" placeholder="you@example.com" autocomplete="email"/>
-            </div>
-            <button id="send-code-btn" class="btn primary block">Send Login Code</button>
-          </div>
-
-          <div id="verify-code-form" class="hidden">
-            <p class="muted text-center" style="margin:16px 0;">Check your email for a 6-digit code</p>
-            <div class="field">
-              <input id="login-code" type="text" placeholder="000000" maxlength="6" autocomplete="one-time-code" class="code-input"/>
-            </div>
-            <button id="verify-code-btn" class="btn primary block">Verify & Continue</button>
-            <button id="resend-btn" class="btn ghost block" style="margin-top:10px;">Resend Code</button>
-          </div>
-
-          <div id="invite-field" class="field hidden" style="margin-top:16px;">
-            <label for="login-invite">Invite Code (if required)</label>
-            <input id="login-invite" type="text" placeholder="ABC123-XYZ789"/>
-          </div>
-
-          <div id="turnstile-container" class="hidden" style="margin-top:16px;"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- DASHBOARD VIEW -->
-    <section id="view-dashboard" class="view hidden">
-      <div class="dashboard-header">
-        <div class="welcome-card">
-          <div>
-            <div class="eyebrow">Welcome back</div>
-            <h2 id="dashboard-greeting">Ready to learn?</h2>
-            <p class="muted" id="dashboard-subtitle">Your personalized learning journey</p>
-          </div>
-          <div class="dashboard-actions">
-            <button id="dashboard-new" class="btn primary large">
-              <span class="btn-icon">✨</span>
-              Generate New Course
-            </button>
-            <button id="dashboard-continue" class="btn secondary large hidden">
-              <span class="btn-icon">▶️</span>
-              Continue Learning
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Stats Grid -->
-      <div id="dashboard-stats" class="stats-grid"></div>
-
-      <!-- Achievements -->
-      <section class="panel" id="achievements-panel">
-        <div class="panel-header">
-          <h3>🏆 Achievements</h3>
-          <span class="badge muted" id="achievements-count">0 unlocked</span>
-        </div>
-        <div id="achievements-grid" class="achievements-grid"></div>
-      </section>
-
-      <!-- Courses -->
-      <section class="panel">
-        <div class="panel-header">
-          <h3>📚 Your Courses</h3>
-        </div>
-        <div id="dashboard-courses" class="courses-grid"></div>
-      </section>
-
-      <!-- Recent Activity -->
-      <section class="panel">
-        <div class="panel-header">
-          <h3>📊 Recent Quiz Scores</h3>
-        </div>
-        <div id="dashboard-scores"></div>
-      </section>
-    </section>
-
-    <!-- GENERATE VIEW -->
-    <section id="view-generate" class="view hidden">
-      <div class="generate-container">
-        <div class="panel">
-          <div class="panel-header">
-            <button id="gen-back" class="btn ghost small">← Back</button>
-            <h2>✨ Generate Your Course</h2>
-            <p class="muted">Tell us what you want to learn, and we'll create a personalized curriculum</p>
-          </div>
-
-          <div class="field">
-            <label for="gen-prompt">What do you want to learn?</label>
-            <textarea id="gen-prompt" rows="4" placeholder="Example: Learn Python for data analysis and automation"></textarea>
-          </div>
-
-          <div class="field-grid">
-            <div class="field">
-              <label for="gen-level">Skill Level</label>
-              <select id="gen-level">
-                <option value="beginner">🌱 Beginner</option>
-                <option value="intermediate">📈 Intermediate</option>
-                <option value="advanced">🚀 Advanced</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="gen-time">Time per Day</label>
-              <select id="gen-time">
-                <option value="15 minutes per day">⚡ 15 minutes</option>
-                <option value="30 minutes per day" selected>⏱️ 30 minutes</option>
-                <option value="60 minutes per day">🕐 60 minutes</option>
-                <option value="90 minutes per day">🕘 90 minutes</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="gen-style">Learning Style</label>
-            <select id="gen-style">
-              <option value="balanced" selected>⚖️ Balanced</option>
-              <option value="visual">👁️ Visual</option>
-              <option value="practical">🛠️ Practical</option>
-              <option value="reading">📖 Reading</option>
-              <option value="conversational">💬 Conversational</option>
-            </select>
-          </div>
-
-          <button id="gen-btn" class="btn primary block large">
-            <span class="btn-icon">🎯</span>
-            Generate Course
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- COURSE VIEW -->
-    <section id="view-course" class="view hidden">
-      <div id="course-content"></div>
-    </section>
-
-    <!-- LESSON VIEW -->
-    <section id="view-lesson" class="view hidden">
-      <div id="lesson-content"></div>
-    </section>
-
-    <!-- QUIZ VIEW -->
-    <section id="view-quiz" class="view hidden">
-      <div id="quiz-content"></div>
-    </section>
-  </main>
-
-  <!-- Toast Notification -->
-  <div id="toast" class="toast"></div>
-
-  <!-- Loading Overlay -->
-  <div id="loading" class="loading hidden">
-    <div class="loading-content">
-      <div class="spinner"></div>
-      <p id="loading-text">Working...</p>
+<header class="topbar">
+  <div class="container topbar-inner">
+    <div class="brand"><div class="brand-icon">🎓</div><span class="brand-text">Learn AI</span></div>
+    <div class="topbar-actions">
+      <div id="nav-stats" class="stat-pill hidden"><span class="stat-icon">🔥</span><span id="streak-count">0</span></div>
+      <button id="nav-dashboard" class="btn ghost hidden">Dashboard</button>
+      <button id="nav-generate" class="btn ghost hidden">New Course</button>
+      <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">🌙</button>
+      <button id="nav-logout" class="btn ghost hidden">Logout</button>
     </div>
   </div>
+</header>
 
-  <script src="config.js"></script>
-  <script src="app.js"></script>
+<main id="main" class="container">
+  <!-- LOGIN -->
+  <section id="view-login" class="view">
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="auth-icon">🚀</div>
+          <h1>Start Learning Today</h1>
+          <p class="muted">Create an account or sign in to continue</p>
+        </div>
+        <div class="field">
+          <label for="login-username">Username</label>
+          <input id="login-username" type="text" placeholder="yourname" autocomplete="username"/>
+        </div>
+        <div class="field">
+          <label for="login-password">Password</label>
+          <input id="login-password" type="password" placeholder="••••••••" autocomplete="current-password"/>
+        </div>
+        <button id="signin-btn" class="btn primary block">Sign In</button>
+        <button id="register-btn" class="btn secondary block" style="margin-top:10px;">Create Account</button>
+        <p class="muted text-center" style="margin-top:16px;font-size:13px;">Passwords are stored hashed (never plain text). Use a strong password.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="view-dashboard" class="view hidden">
+    <div class="dashboard-header">
+      <div class="welcome-card">
+        <div>
+          <div class="eyebrow">Welcome back</div>
+          <h2 id="dashboard-greeting">Ready to learn?</h2>
+          <p class="muted" id="dashboard-subtitle">Your personalized learning journey</p>
+        </div>
+        <div class="dashboard-actions">
+          <button id="dashboard-new" class="btn primary large"><span class="btn-icon">✨</span>Generate New Course</button>
+          <button id="dashboard-continue" class="btn secondary large hidden"><span class="btn-icon">▶️</span>Continue Learning</button>
+        </div>
+      </div>
+    </div>
+    <div id="dashboard-stats" class="stats-grid"></div>
+    <section class="panel" id="achievements-panel">
+      <div class="panel-header"><h3>🏆 Achievements</h3><span class="badge muted" id="achievements-count">0 unlocked</span></div>
+      <div id="achievements-grid" class="achievements-grid"></div>
+    </section>
+    <section class="panel">
+      <div class="panel-header"><h3>📚 Your Courses</h3></div>
+      <div id="dashboard-courses" class="courses-grid"></div>
+    </section>
+    <section class="panel">
+      <div class="panel-header"><h3>📊 Recent Quiz Scores</h3></div>
+      <div id="dashboard-scores"></div>
+    </section>
+  </section>
+
+  <!-- GENERATE -->
+  <section id="view-generate" class="view hidden">
+    <div class="generate-container">
+      <div class="panel">
+        <div class="panel-header">
+          <button id="gen-back" class="btn ghost small">← Back</button>
+          <h2>✨ Generate Your Course</h2>
+          <p class="muted">Tell us what you want to learn, and we'll create a personalized curriculum</p>
+        </div>
+        <div class="field">
+          <label for="gen-prompt">What do you want to learn?</label>
+          <textarea id="gen-prompt" rows="4" placeholder="Example: Learn Python for data analysis and automation"></textarea>
+        </div>
+        <div class="field-grid">
+          <div class="field">
+            <label for="gen-level">Skill Level</label>
+            <select id="gen-level">
+              <option value="beginner">🌱 Beginner</option>
+              <option value="intermediate">📈 Intermediate</option>
+              <option value="advanced">🚀 Advanced</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="gen-time">Time per Day</label>
+            <select id="gen-time">
+              <option value="15 minutes per day">⚡ 15 minutes</option>
+              <option value="30 minutes per day" selected>⏱️ 30 minutes</option>
+              <option value="60 minutes per day">🕐 60 minutes</option>
+              <option value="90 minutes per day">🕘 90 minutes</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="gen-style">Learning Style</label>
+          <select id="gen-style">
+            <option value="balanced" selected>⚖️ Balanced</option>
+            <option value="visual">👁️ Visual</option>
+            <option value="practical">🛠️ Practical</option>
+            <option value="reading">📖 Reading</option>
+            <option value="conversational">💬 Conversational</option>
+          </select>
+        </div>
+        <button id="gen-btn" class="btn primary block large"><span class="btn-icon">🎯</span>Generate Course</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-course" class="view hidden"><div id="course-content"></div></section>
+  <section id="view-lesson" class="view hidden"><div id="lesson-content"></div></section>
+  <section id="view-quiz" class="view hidden"><div id="quiz-content"></div></section>
+</main>
+
+<div id="toast" class="toast"></div>
+<div id="loading" class="loading hidden"><div class="loading-content"><div class="spinner"></div><p id="loading-text">Working...</p></div></div>
+
+<script>
+/* ============================================================
+   CONFIG — edit ONLY this, then deploy this single file.
+   ============================================================ */
+const CONFIG = {
+  API_URL: "PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE"
+};
+
+/* ============================================================
+   APP LOGIC
+   ============================================================ */
+const state = { user:null, token:null, course:null, lesson:null, quiz:null, result:null, config:null, stats:null };
+let loadingCount = 0;
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+document.addEventListener("DOMContentLoaded", init);
+
+async function init(){
+  initTheme(); bindStaticEvents(); await loadConfig();
+  const token = ls("lmsToken"), userId = ls("lmsUserId");
+  if(token && userId){
+    state.token = token;
+    state.user = { userId, name: ls("lmsUserName") || "Learner", username: ls("lmsUsername") || "" };
+    await enterApp();
+  } else { showView("login"); }
+}
+
+async function loadConfig(){
+  try{
+    const cfg = await api("getConfig", {}, true);
+    state.config = cfg;
+    if(cfg && cfg.allowRegister === false) $("#register-btn").classList.add("hidden");
+  }catch(e){ /* offline / not configured yet: keep defaults */ }
+}
+
+function initTheme(){
+  const saved = ls("theme");
+  const preferred = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", saved || preferred);
+  updateThemeIcon();
+}
+function toggleTheme(){
+  const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next); lss("theme", next); updateThemeIcon();
+}
+function updateThemeIcon(){ $("#theme-toggle").textContent = document.documentElement.getAttribute("data-theme") === "dark" ? "☀️" : "🌙"; }
+
+function ls(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lss(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+function lsr(k){ try{ localStorage.removeItem(k); }catch(e){} }
+
+async function api(action, params = {}, noAuth = false){
+  showLoading(action.includes("generate") || action.includes("submit") ? "AI is thinking..." : "Working...");
+  try{
+    const body = { action, params };
+    if(!noAuth && state.token) body.token = state.token;
+    if(!CONFIG.API_URL || CONFIG.API_URL.includes("PASTE_YOUR")){
+      throw new Error("API_URL not set. Edit the CONFIG block at the top of index.html.");
+    }
+    const res = await fetch(CONFIG.API_URL, {
+      method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify(body), redirect:"follow", cache:"no-store"
+    });
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); }
+    catch(e){ throw new Error("Backend returned non-JSON (wrong URL or not deployed as web app)."); }
+    if(!data.success) throw new Error(data.error || "Request failed");
+    return data.data;
+  }catch(err){
+    if(err instanceof TypeError){
+      console.error("[API] network failure →", CONFIG.API_URL, err);
+      showToast("Can't reach backend. Check API_URL ends with /exec and deployment access = Anyone.", true);
+    } else {
+      showToast(err.message || "Network error", true);
+    }
+    throw err;
+  } finally { hideLoading(); }
+}
+
+function showView(name){ $$(".view").forEach(v => v.classList.add("hidden")); $(`#view-${name}`).classList.remove("hidden"); scrollTo(0,0); }
+function showLoading(t="Working..."){ loadingCount++; $("#loading").classList.remove("hidden"); $("#loading-text").textContent = t; }
+function hideLoading(){ loadingCount = Math.max(0, loadingCount-1); if(!loadingCount) $("#loading").classList.add("hidden"); }
+function showToast(m, err=false){ const t=$("#toast"); t.textContent=m; t.className = err ? "toast error show" : "toast success show"; setTimeout(()=>t.classList.remove("show"), 4000); }
+function esc(v){ return v==null ? "" : String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
+function textHtml(v){ return esc(v).replace(/\n/g,"<br>"); }
+function listHtml(items){ return items && items.length ? `<ul>${items.map(i=>`<li>${textHtml(i)}</li>`).join("")}</ul>` : ""; }
+function emptyBox(m, icon="📭"){ return `<div class="empty"><div class="empty-icon">${icon}</div>${esc(m)}</div>`; }
+function fmtDate(v){ const d=new Date(v); return isNaN(d) ? esc(v||"") : d.toLocaleDateString(); }
+
+function bindStaticEvents(){
+  $("#theme-toggle").addEventListener("click", toggleTheme);
+  $("#signin-btn").addEventListener("click", signIn);
+  $("#register-btn").addEventListener("click", register);
+  $("#login-password").addEventListener("keyup", e => { if(e.key==="Enter") signIn(); });
+  $("#login-username").addEventListener("keyup", e => { if(e.key==="Enter") $("#login-password").focus(); });
+  $("#nav-dashboard").addEventListener("click", loadDashboard);
+  $("#nav-generate").addEventListener("click", () => showView("generate"));
+  $("#nav-logout").addEventListener("click", logout);
+  $("#dashboard-new").addEventListener("click", () => showView("generate"));
+  $("#gen-back").addEventListener("click", loadDashboard);
+  $("#gen-btn").addEventListener("click", generateCourse);
+}
+
+/* ---- auth ---- */
+function readCreds(){
+  return {
+    username: $("#login-username").value.trim(),
+    password: $("#login-password").value
+  };
+}
+async function signIn(){
+  const { username, password } = readCreds();
+  if(!username || !password){ showToast("Enter username and password", true); return; }
+  try{
+    const data = await api("login", { username, password, userAgent: navigator.userAgent }, true);
+    completeLogin(data);
+  }catch(e){}
+}
+async function register(){
+  const { username, password } = readCreds();
+  if(!username || !password){ showToast("Enter username and password", true); return; }
+  try{
+    const data = await api("register", { username, password, userAgent: navigator.userAgent }, true);
+    completeLogin(data);
+    showToast("Account created! 🎉");
+  }catch(e){}
+}
+function completeLogin(data){
+  state.user = data.user; state.token = data.session.token;
+  lss("lmsUserId", data.user.userId);
+  lss("lmsUserName", data.user.name || data.user.username);
+  lss("lmsUsername", data.user.username);
+  lss("lmsToken", data.session.token);
+  enterApp();
+}
+async function logout(){
+  try{ await api("logout", {}); }catch(e){}
+  state.user = null; state.token = null;
+  ["lmsUserId","lmsUserName","lmsUsername","lmsToken"].forEach(lsr);
+  location.reload();
+}
+async function enterApp(){
+  ["nav-dashboard","nav-generate","nav-logout","nav-stats"].forEach(id => $(`#${id}`).classList.remove("hidden"));
+  await loadDashboard();
+}
+
+/* ---- dashboard ---- */
+async function loadDashboard(){
+  if(!state.user){ showView("login"); return; }
+  try{
+    const data = await api("getDashboard", { userId: state.user.userId });
+    state.stats = data; renderDashboard(data); showView("dashboard");
+  }catch(e){}
+}
+function renderDashboard(data){
+  const first = (state.user?.name || state.user?.username || "Learner").split(" ")[0];
+  $("#dashboard-greeting").textContent = `Hey ${first}! 👋`;
+  $("#dashboard-subtitle").textContent = `${data.streak} day streak • ${data.completedLessons} lessons completed`;
+  $("#streak-count").textContent = data.streak;
+  $("#dashboard-stats").innerHTML = `
+    <div class="stat-card"><div class="stat-icon-large">📚</div><div class="stat-value">${esc(data.courses.length)}</div><div class="stat-label">Courses</div></div>
+    <div class="stat-card"><div class="stat-icon-large">✅</div><div class="stat-value">${esc(data.completedLessons)}</div><div class="stat-label">Lessons Done</div></div>
+    <div class="stat-card"><div class="stat-icon-large">🎯</div><div class="stat-value">${esc(data.averageScore)}%</div><div class="stat-label">Avg Quiz Score</div></div>
+    <div class="stat-card"><div class="stat-icon-large">🔥</div><div class="stat-value">${esc(data.streak)}</div><div class="stat-label">Day Streak</div></div>`;
+  const cb = $("#dashboard-continue");
+  if(data.continueCourseId){ cb.classList.remove("hidden"); cb.onclick = () => openCourse(data.continueCourseId); }
+  else cb.classList.add("hidden");
+  renderAchievements(data.achievements || []);
+  const ce = $("#dashboard-courses");
+  if(!data.courses?.length){ ce.innerHTML = emptyBox("No courses yet. Generate your first course!", "✨"); }
+  else{
+    ce.innerHTML = data.courses.map(c => `
+      <div class="course-card" data-course="${esc(c.courseId)}">
+        <h4>${esc(c.title)}</h4>
+        <p class="muted">${esc(c.description || "")}</p>
+        <div class="course-meta"><span class="badge">${esc(c.level || "course")}</span><span class="badge">${esc(c.estimatedHours || "?")}h</span></div>
+      </div>`).join("");
+    $$("[data-course]").forEach(card => card.addEventListener("click", () => openCourse(card.dataset.course)));
+  }
+  const se = $("#dashboard-scores");
+  if(!data.recentScores?.length){ se.innerHTML = emptyBox("No quiz attempts yet", "📝"); }
+  else{
+    se.innerHTML = `<div class="table-wrap"><table class="table"><thead><tr><th>Lesson</th><th>Score</th><th>Date</th></tr></thead><tbody>
+      ${data.recentScores.map(s => `<tr><td>${esc(s.lessonTitle)}</td><td><strong>${esc(s.score)}%</strong></td><td>${fmtDate(s.createdAt)}</td></tr>`).join("")}
+      </tbody></table></div>`;
+  }
+}
+function renderAchievements(achievements){
+  const grid = $("#achievements-grid"), count = $("#achievements-count");
+  count.textContent = `${achievements.length} unlocked`;
+  if(!achievements.length){ grid.innerHTML = emptyBox("Complete lessons to unlock achievements!", "🏆"); return; }
+  grid.innerHTML = achievements.map(a => `
+    <div class="achievement-card"><div class="achievement-icon">${esc(a.icon)}</div>
+    <div class="achievement-name">${esc(a.name)}</div><div class="achievement-desc">${esc(a.description)}</div></div>`).join("");
+}
+
+/* ---- generate ---- */
+async function generateCourse(){
+  const prompt = $("#gen-prompt").value.trim();
+  if(!prompt){ showToast("Enter a topic to learn", true); return; }
+  try{
+    const course = await api("generateCourse", {
+      userId: state.user.userId, prompt,
+      level: $("#gen-level").value, timeAvailable: $("#gen-time").value, learningStyle: $("#gen-style").value
+    });
+    showToast("Course generated! 🎉"); openCourse(course.courseId);
+  }catch(e){}
+}
+
+/* ---- course ---- */
+async function openCourse(courseId){
+  try{
+    const course = await api("getCourseById", { courseId, userId: state.user.userId });
+    state.course = course; renderCourse(course); showView("course");
+  }catch(e){}
+}
+function renderCourse(course){
+  const mods = course.structure?.modules || [];
+  let html = `<button id="course-back" class="btn ghost">← Back to Dashboard</button>
+    <div class="panel" style="margin-top:16px">
+      <div class="eyebrow">Course</div><h2>${esc(course.title)}</h2>
+      <p class="muted">${textHtml(course.description || "")}</p>
+      <div class="course-meta"><span class="badge">${esc(course.level||"")}</span><span class="badge">${esc(course.estimatedHours||"?")} hours</span><span class="badge success">${esc(course.progressPercent||0)}% complete</span></div>
+      <div class="progress-container"><div class="progress-bar"><div class="progress-fill" style="width:${course.progressPercent||0}%"></div></div>
+      <div class="progress-text"><span>${esc(course.completedCount||0)} of ${esc(course.totalLessons||0)} lessons</span><span>${esc(course.progressPercent||0)}%</span></div></div>
+    </div>`;
+  if(!mods.length){ html += emptyBox("No modules found","📚"); }
+  else{
+    html += mods.map((m,mi) => `<div class="panel"><h3>Module ${mi+1}: ${esc(m.title)}</h3>
+      ${(m.lessons||[]).map((l,li) => {
+        const done = course.completedKeys?.indexOf(`${m.title}::${l.title}`) >= 0;
+        return `<div class="lesson-item ${done?'completed':''}" data-mi="${mi}" data-li="${li}">
+          <div class="lesson-item-content"><div class="lesson-item-title">${done?'✅':'📖'} ${esc(l.title)}</div>
+          <div class="lesson-item-summary">${esc(l.summary||"")}</div></div>
+          <button class="btn ${done?'ghost':'primary'} small">${done?'Review':'Start'}</button></div>`;
+      }).join("")}</div>`).join("");
+  }
+  $("#course-content").innerHTML = html;
+  $("#course-back").addEventListener("click", loadDashboard);
+  $$("[data-mi]").forEach(item => item.addEventListener("click", () => {
+    const m = state.course.structure.modules[+item.dataset.mi];
+    const l = m.lessons[+item.dataset.li];
+    openLesson(m.title, l.title, l.summary || "");
+  }));
+}
+
+/* ---- lesson ---- */
+async function openLesson(moduleTitle, lessonTitle, lessonSummary){
+  try{
+    const lesson = await api("generateLesson", {
+      userId: state.user.userId, courseId: state.course.courseId, moduleTitle, lessonTitle, lessonSummary
+    });
+    state.lesson = lesson; renderLesson(lesson); showView("lesson");
+  }catch(e){}
+}
+function renderLesson(lesson){
+  const html = `<div class="lesson-container">
+    <button id="lesson-back" class="btn ghost">← Back to Course</button>
+    <div class="panel" style="margin-top:16px">
+      <div class="eyebrow">Lesson</div><h2>${esc(lesson.title||lesson.lessonTitle)}</h2>
+      <div class="course-meta"><span class="badge">${esc(lesson.moduleTitle)}</span>${lesson.completed?'<span class="badge success">✓ Completed</span>':''}</div>
+      <div class="lesson-content">${textHtml(lesson.content)}</div>
+      ${lesson.keyPoints?.length ? `<div class="lesson-section"><h4>🎯 Key Points</h4><ul class="key-points">${lesson.keyPoints.map(p=>`<li>${esc(p)}</li>`).join("")}</ul></div>` : ''}
+      ${lesson.examples?.length ? `<div class="lesson-section"><h4>💡 Examples</h4>${listHtml(lesson.examples)}</div>` : ''}
+      ${lesson.commonMistakes?.length ? `<div class="lesson-section"><h4>⚠️ Common Mistakes</h4>${listHtml(lesson.commonMistakes)}</div>` : ''}
+      ${lesson.exercise ? `<div class="lesson-section"><h4>🎮 Practice Exercise</h4><p>${textHtml(lesson.exercise)}</p>
+        <button id="hint-btn" class="btn ghost small" style="margin-top:12px">💡 Show Hint</button>
+        <button id="solution-btn" class="btn ghost small" style="margin-top:12px">✓ Show Solution</button>
+        <div id="hint-box" class="hidden" style="margin-top:12px;padding:16px;background:var(--bg-secondary);border-radius:var(--radius-sm)">${textHtml(lesson.hint||"No hint available")}</div>
+        <div id="solution-box" class="hidden" style="margin-top:12px;padding:16px;background:var(--bg-secondary);border-radius:var(--radius-sm)">${textHtml(lesson.solution||"No solution available")}</div></div>` : ''}
+      ${lesson.summary ? `<div class="lesson-section"><h4>📝 Summary</h4><p>${textHtml(lesson.summary)}</p></div>` : ''}
+      <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap">
+        <button id="complete-btn" class="btn ${lesson.completed?'ghost':'primary'} large">${lesson.completed?'✓ Completed':'✓ Complete Lesson'}</button>
+        <button id="quiz-btn" class="btn secondary large">📝 Take Quiz</button>
+      </div>
+    </div>
+    <div class="tutor-container"><h3>🤖 AI Tutor</h3><p class="muted">Ask questions about this lesson</p>
+      <div id="tutor-messages" class="tutor-messages"></div>
+      <div class="tutor-input"><input id="tutor-question" type="text" placeholder="Ask a question..."/><button id="tutor-send" class="btn primary">Send</button></div>
+    </div></div>`;
+  $("#lesson-content").innerHTML = html;
+  $("#lesson-back").addEventListener("click", () => openCourse(state.course.courseId));
+  $("#hint-btn")?.addEventListener("click", () => $("#hint-box").classList.toggle("hidden"));
+  $("#solution-btn")?.addEventListener("click", () => $("#solution-box").classList.toggle("hidden"));
+  $("#complete-btn").addEventListener("click", completeLesson);
+  $("#quiz-btn").addEventListener("click", openQuiz);
+  $("#tutor-send").addEventListener("click", sendTutor);
+  $("#tutor-question").addEventListener("keyup", e => { if(e.key==="Enter") sendTutor(); });
+  appendTutor("Tutor", "Hi! Ask me anything about this lesson.");
+}
+async function completeLesson(){
+  if(!state.lesson || state.lesson.completed) return;
+  try{
+    await api("markLessonComplete", { userId: state.user.userId, courseId: state.lesson.courseId, lessonId: state.lesson.lessonId });
+    state.lesson.completed = true;
+    const b = $("#complete-btn"); b.textContent = "✓ Completed"; b.classList.remove("primary"); b.classList.add("ghost");
+    showToast("Lesson completed! 🎉");
+  }catch(e){}
+}
+
+/* ---- tutor ---- */
+async function sendTutor(){
+  if(!state.lesson) return;
+  const input = $("#tutor-question"), q = input.value.trim();
+  if(!q) return;
+  appendTutor("You", q); input.value = "";
+  try{ const r = await api("askTutor", { userId: state.user.userId, lessonId: state.lesson.lessonId, question: q }); appendTutor("Tutor", r.answer); }catch(e){}
+}
+function appendTutor(sender, message){
+  const el = $("#tutor-messages"); if(!el) return;
+  const d = document.createElement("div");
+  d.className = `tutor-msg ${sender==="You"?"user":"ai"}`;
+  d.innerHTML = `<strong>${esc(sender)}:</strong> ${textHtml(message)}`;
+  el.appendChild(d); el.scrollTop = el.scrollHeight;
+}
+
+/* ---- quiz ---- */
+async function openQuiz(){
+  if(!state.lesson) return;
+  try{
+    const quiz = await api("generateQuiz", { userId: state.user.userId, courseId: state.lesson.courseId, lessonId: state.lesson.lessonId });
+    state.quiz = quiz; renderQuiz(quiz); showView("quiz");
+  }catch(e){}
+}
+function renderQuiz(quiz){
+  const html = `<div class="lesson-container">
+    <button id="quiz-back" class="btn ghost">← Back to Lesson</button>
+    <div class="panel" style="margin-top:16px">
+      <div class="eyebrow">Quiz</div><h2>${esc(state.lesson.title||state.lesson.lessonTitle)}</h2>
+      <div id="quiz-form">${quiz.questions.map((q,i) => {
+        let body = q.type==="short_answer"
+          ? `<input type="text" class="quiz-answer" data-id="${esc(q.id)}" placeholder="Your answer"/>`
+          : `<div class="options">${(q.type==="true_false"?["True","False"]:(q.options||[])).map(o=>`<label class="option"><input type="radio" name="${esc(q.id)}" value="${esc(o)}"/><span>${esc(o)}</span></label>`).join("")}</div>`;
+        return `<div class="question-card"><div class="question-text">${i+1}. ${esc(q.question)}</div>${body}</div>`;
+      }).join("")}</div>
+      <button id="submit-quiz" class="btn primary block large">Submit Quiz</button>
+      <div id="quiz-result"></div>
+    </div></div>`;
+  $("#quiz-content").innerHTML = html;
+  $("#quiz-back").addEventListener("click", () => showView("lesson"));
+  $("#submit-quiz").addEventListener("click", submitQuiz);
+}
+async function submitQuiz(){
+  if(!state.quiz || !state.lesson) return;
+  const answers = state.quiz.questions.map(q => {
+    if(q.type==="short_answer"){ const i=document.querySelector(`.quiz-answer[data-id="${q.id}"]`); return i?i.value:""; }
+    const c = document.querySelector(`input[name="${q.id}"]:checked`); return c?c.value:"";
+  });
+  try{
+    const result = await api("submitQuiz", { userId: state.user.userId, courseId: state.lesson.courseId, lessonId: state.lesson.lessonId, answers });
+    state.result = result; renderQuizResult(result);
+  }catch(e){}
+}
+function renderQuizResult(result){
+  const html = `<div class="score-display"><div class="score-value">${esc(result.score)}%</div><div class="score-label">${esc(result.correct)} of ${esc(result.total)} correct</div></div>
+    <h3>Results</h3>
+    ${result.results.map(r => `<div class="result-card ${r.correct?'correct':'incorrect'}">
+      <p><strong>${esc(r.question)}</strong></p><p>Your answer: ${esc(r.userAnswer||"—")}</p>
+      <p>Correct answer: ${esc(r.correctAnswer)}</p><p class="muted">${textHtml(r.explanation)}</p></div>`).join("")}
+    ${result.score<70 ? `<button id="review-btn" class="btn primary block large" style="margin-top:24px">📖 Generate Review</button>` : ''}
+    <div id="review-area"></div>`;
+  $("#quiz-result").innerHTML = html;
+  if(result.score<70) $("#review-btn").addEventListener("click", generateReview);
+}
+async function generateReview(){
+  if(!state.result || !state.lesson) return;
+  const weak = state.result.results.filter(r => !r.correct).map(r => r.question);
+  const b = $("#review-btn"); if(b) b.disabled = true;
+  try{
+    const review = await api("generateReview", { userId: state.user.userId, courseId: state.lesson.courseId, lessonId: state.lesson.lessonId, weakTopics: weak, score: state.result.score });
+    renderReview(review);
+  }catch(e){ if(b) b.disabled = false; }
+}
+function renderReview(review){
+  $("#review-area").innerHTML = `<div class="panel" style="margin-top:24px">
+    <div class="eyebrow">Review</div>
+    <h3>📖 Simplified Explanation</h3><div class="lesson-section">${textHtml(review.simplifiedExplanation)}</div>
+    <h3 style="margin-top:24px">🎯 Review Lesson</h3><div class="lesson-section">${textHtml(review.reviewLesson)}</div>
+    ${review.practiceQuestions?.length ? `<h3 style="margin-top:24px">✏️ Extra Practice</h3>
+      ${review.practiceQuestions.map((q,i)=>`<div class="question-card"><div class="question-text">${i+1}. ${esc(q.question)}</div><p><strong>Answer:</strong> ${esc(q.correctAnswer)}</p><p class="muted">${textHtml(q.explanation)}</p></div>`).join("")}` : ''}
+    </div>`;
+}
+</script>
 </body>
 </html>
