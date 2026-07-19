@@ -1,5 +1,5 @@
 const CONFIG = {
-  API_URL: "https://script.google.com/macros/s/AKfycby8Pjor1Y5Kh97ZpBRsMYs8RD-_E1U5-Uovz666uBq10WJl78hvRJV62ujSPkRea22ZLg/exec",
+  API_URL: "https://script.google.com/macros/s/AKfycbzfpwdyI4JJohBJVr76b46QnwGAmbiqsQQvekiq70H8tzDZZ3pOJyurFOP1-51gpG2oVQ/exec",
   // These can be left blank — the app will fetch them from the backend via getConfig().
   // But hardcoding them avoids a loading flash.
   GOOGLE_CLIENT_ID: "",
